@@ -1,16 +1,18 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+// import * as github from '@actions/github'
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
-
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
-
-    core.setOutput('time', new Date().toTimeString())
+    const repo: string = core.getInput('repo')
+    core.debug(`Target repository for cache cleaning is: "${repo}"`)
+    const keys: string[] = core.getMultilineInput('keys')
+    core.debug(`Only the following keys will get cleaned: "${keys.join(',')}"`)
+    const limit: number = parseInt(core.getInput('limit'), 10)
+    core.debug(`Cache cleaning limit is at "${limit}"`)
+    const gh_token = process.env['GITHUB_TOKEN'] || core.getInput('token')
+    core.setSecret(gh_token)
+    // const octokit = github.getOctokit(gh_token)
+    core.debug('Initialization finished')
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
