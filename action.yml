@@ -2,18 +2,18 @@ name: 'Delete Github Cache'
 description: 'Action to clean the github cache'
 author: 'Jontze <dev@jontze.com>'
 inputs:
+  token:
+    required: true
+    description: Github token with read and write access to the target repository
+  keys:
+    required: true
+    description: Target cache key
   repo:
     required: false
     description: Target repository
-  keys:
-    required: false
-    description: Target cache key
   limit:
     required: false
     description: GB limit - the action will start to delete cache entries only if the limit is exceeded
-  token:
-    required: false
-    description: Github token with read and write access to the target repository
 runs:
   using: 'node16'
   main: 'dist/index.js'

@@ -1,0 +1,9 @@
+name: PR Analysis
+on: # rebuild any PRs and main branch changes
+  pull_request:
+
+jobs:
+  test_pr:
+    name: Test
+    uses: ./.github/workflows/test.yml
+    secrets: inherit
