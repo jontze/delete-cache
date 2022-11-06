@@ -1,7 +1,13 @@
-import {getMultilineInput, debug, info, group, setFailed} from '@actions/core';
-import {getOctokit} from '@actions/github';
-import {deleteRepoCacheByKey} from './delete';
-import {getGhToken, getLimit, getRepo} from './setup';
+import {
+  getMultilineInput,
+  debug,
+  info,
+  group,
+  setFailed,
+} from '@actions/core';
+import { getOctokit } from '@actions/github';
+import { deleteRepoCacheByKey } from './delete';
+import { getGhToken, getLimit, getRepo } from './setup';
 
 async function run(): Promise<void> {
   try {
@@ -25,7 +31,7 @@ async function run(): Promise<void> {
         await group<void>(`Delete cache entries for key "${key}"`, async () => {
           const deletedCaches = await deleteRepoCacheByKey(octokit, {
             ...repo,
-            key
+            key,
           });
           info(`${deletedCaches.amount} cache entries were deleted`);
           for (const cacheItem of deletedCaches.caches) {
