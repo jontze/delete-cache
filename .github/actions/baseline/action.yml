@@ -1,0 +1,15 @@
+name: Baseline
+author: Jontze <dev@jontze.com>
+description: Setup the project dependencies
+
+runs:
+  using: composite
+  steps:
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.x
+        cache: 'yarn'
+    - name: Setup node_modules
+      shell: bash
+      run: yarn install --prefer-offline --frozen-lockfile
