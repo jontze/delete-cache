@@ -109,5 +109,6 @@ jobs:
       - name: Use local action to clean up workflow cache
         uses: ./
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           keys: |
             workflow-cache-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
