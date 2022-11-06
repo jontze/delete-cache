@@ -3,6 +3,11 @@ on:
   workflow_call:
 
 jobs:
+  scan:
+    name: 'CodeQL'
+    uses: ./.github/workflows/code-analysis.yml
+    secrets: inherit
+
   setup:
     runs-on: ubuntu-latest
     steps:
