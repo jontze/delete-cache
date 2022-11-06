@@ -1,22 +1,108 @@
-name: 'build-test'
-on: # rebuild any PRs and main branch changes
-  pull_request:
-  push:
-    branches:
-      - main
-      - 'releases/*'
+name: Test
+on:
+  workflow_call:
 
 jobs:
-  build: # make sure build/ci work properly
+  setup:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: |
-          yarn --prefer-offline --frozen-lockfile
-      - run: |
-          yarn all
-  test: # make sure the action works on a clean machine without building
+      - name: Setup project baseline
+        uses: ./.github/actions/baseline
+      - name: Cache workflow dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules/
+          key: workflow-cache-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
+
+  build:
     runs-on: ubuntu-latest
+    needs:
+      - setup
     steps:
       - uses: actions/checkout@v3
-      - uses: ./
+      - name: Restore workflow deps
+        id: deps
+        uses: actions/cache@v3
+        with:
+          path: node_modules/
+          key: workflow-cache-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
+      - name: Test build
+        run: yarn build
+
+  check_dist:
+    runs-on: ubuntu-latest
+    needs:
+      - setup
+    steps:
+      - uses: actions/checkout@v3
+      - name: Restore workflow deps
+        id: deps
+        uses: actions/cache@v3
+        with:
+          path: node_modules/
+          key: workflow-cache-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
+      - name: Rebuild the dist/ directory
+        run: |
+          yarn build
+          yarn package
+      - name: Compare the expected and actual dist/ directories
+        run: |
+          if [ "$(git diff --ignore-space-at-eol dist/ | wc -l)" -gt "0" ]; then
+            echo "Detected uncommitted changes after build.  See status below:"
+            git diff
+            exit 1
+          fi
+        id: diff
+      # If index.js was different than expected, upload the expected version as an artifact
+      - uses: actions/upload-artifact@v3
+        if: ${{ failure() && steps.diff.conclusion == 'failure' }}
+        with:
+          name: dist
+          path: dist/
+
+  unit_test:
+    runs-on: ubuntu-latest
+    needs:
+      - setup
+    steps:
+      - uses: actions/checkout@v3
+      - name: Restore workflow deps
+        id: deps
+        uses: actions/cache@v3
+        with:
+          path: node_modules/
+          key: workflow-cache-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
+      - name: Run unit tests
+        run: yarn test
+
+  lint:
+    runs-on: ubuntu-latest
+    needs:
+      - setup
+    steps:
+      - uses: actions/checkout@v3
+      - name: Restore workflow deps
+        id: deps
+        uses: actions/cache@v3
+        with:
+          path: node_modules/
+          key: workflow-cache-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
+      - name: Run linting
+        run: yarn lint
+
+  clean_up:
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - build
+      - lint
+      - unit_test
+      - check_dist
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use local action to clean up workflow cache
+        uses: ./
+        with:
+          keys: |
+            workflow-cache-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
