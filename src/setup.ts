@@ -10,7 +10,7 @@ export const getRepo = (): Repo => {
   const repoInput = getInput('repo');
   if (repoInput) {
     const [owner, repo] = repoInput.split('/');
-    return {owner, repo};
+    return { owner, repo };
   }
   return github.context.repo;
 };

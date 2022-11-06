@@ -1,4 +1,4 @@
-import {GitHub} from '@actions/github/lib/utils';
+import { GitHub } from '@actions/github/lib/utils';
 
 export type HydratedOctokit = InstanceType<typeof GitHub>;
 
