@@ -28,7 +28,7 @@ export const deleteRepoCacheByKey = async (
   payload: DeletePayload
 ): Promise<DeletedCaches> => {
   const res = await github.rest.actions.deleteActionsCacheByKey({
-    ...payload
+    ...payload,
   });
   return {
     amount: res.data.total_count,
@@ -38,7 +38,7 @@ export const deleteRepoCacheByKey = async (
       key: deletedCache.key,
       size: deletedCache.size_in_bytes,
       usedAt: deletedCache.last_accessed_at,
-      createdAt: deletedCache.created_at
-    }))
+      createdAt: deletedCache.created_at,
+    })),
   };
 };
