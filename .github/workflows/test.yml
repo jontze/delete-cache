@@ -11,7 +11,7 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup project baseline
         uses: ./.github/actions/baseline
       - name: Cache workflow dependencies
@@ -25,7 +25,7 @@ jobs:
     needs:
       - setup
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Restore workflow deps
         id: deps
         uses: actions/cache@v3
@@ -40,7 +40,7 @@ jobs:
     needs:
       - setup
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Restore workflow deps
         id: deps
         uses: actions/cache@v3
@@ -71,7 +71,7 @@ jobs:
     needs:
       - setup
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Restore workflow deps
         id: deps
         uses: actions/cache@v3
@@ -86,7 +86,7 @@ jobs:
     needs:
       - setup
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Restore workflow deps
         id: deps
         uses: actions/cache@v3
@@ -105,7 +105,7 @@ jobs:
       - unit_test
       - check_dist
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use local action to clean up workflow cache
         uses: ./
         with:
