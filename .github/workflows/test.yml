@@ -15,7 +15,7 @@ jobs:
       - name: Setup project baseline
         uses: ./.github/actions/baseline
       - name: Cache workflow dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules/
           key: workflow-cache-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Restore workflow deps
         id: deps
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules/
           key: workflow-cache-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
@@ -43,7 +43,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Restore workflow deps
         id: deps
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules/
           key: workflow-cache-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
@@ -74,7 +74,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Restore workflow deps
         id: deps
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules/
           key: workflow-cache-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
@@ -89,7 +89,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Restore workflow deps
         id: deps
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules/
           key: workflow-cache-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
